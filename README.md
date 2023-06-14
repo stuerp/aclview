@@ -14,11 +14,7 @@
 
 ## Getting started
 
-* Double-click `aclview.zip`.
-
-or
-
-* Select `aclview.zip` in the Total Commander Lister plugins dialog.
+* Double-click `aclview.zip` in Total Commander.
 
 ## Developing
 
@@ -55,7 +51,7 @@ branch. Pull requests are warmly welcome.
 
 ## Change Log
 
-v0.1.0, 2023-06-13, *"Scratchin' the itch"*
+v0.1.0, 2023-06-14, *"Scratchin' the itch"*
 
 * Initial release.
 
