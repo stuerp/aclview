@@ -3,7 +3,7 @@
 
 [aclview](https://github.com/stuerp/aclview/releases) is a [Total Commander](https://www.ghisler.com/) lister plugin that shows the ACL of a file or directory.
 
-[](https://github.com/stuerp/aclview/Artwork/Screenshot.png)
+![Screenshot](/Artwork/Screenshot.png?raw=true "Screenshot")
 
 ## Features
 
