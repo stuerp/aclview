@@ -3,6 +3,8 @@
 
 [aclview](https://github.com/stuerp/aclview/releases) is a [Total Commander](https://www.ghisler.com/) lister plugin that shows the ACL of a file or directory.
 
+[](https://github.com/stuerp/aclview/Artwork/Screenshot.png)
+
 ## Features
 
 * Supports dark mode.
@@ -65,6 +67,7 @@ v0.1.0, 2023-06-14, *"Scratchin' the itch"*
   * [Desktop App User Interface](https://learn.microsoft.com/en-us/windows/win32/windows-application-ui-development)
   * [Windows User Experience Interaction Guidelines](https://learn.microsoft.com/en-us/windows/win32/uxguide/guidelines)
   * [Windows Controls](https://learn.microsoft.com/en-us/windows/win32/controls/window-controls)
+      * [RichEdit](https://learn.microsoft.com/en-us/windows/win32/controls/rich-edit-controls)
   * [Control Library](https://learn.microsoft.com/en-us/windows/win32/controls/individual-control-info)
   * [Resource-Definition Statements](https://learn.microsoft.com/en-us/windows/win32/menurc/resource-definition-statements)
   * [Visuals, Layout](https://learn.microsoft.com/en-us/windows/win32/uxguide/vis-layout)
