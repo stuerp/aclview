@@ -54,21 +54,23 @@ BOOL APIENTRY DllMain(HANDLE hModule, DWORD reason, LPVOID)
 }
 
 /// <summary>
-/// 
+/// Called when a user opens lister with F3 or the Quick View Panel with Ctrl+Q, and when the definition string either doesn't exist, or its evaluation returns true.
 /// </summary>
 HWND __stdcall ListLoad(HWND hWnd, char * filePath, int showFlags)
 {
-    WCHAR FilePathW[wdirtypemax];
+    WCHAR FilePathW[MAX_PATH];
+
+    ::MultiByteToWideChar(CP_ACP, 0, filePath, -1, FilePathW, _countof(FilePathW) - 1);
 
     return ListLoadW(hWnd, awfilenamecopy(FilePathW, filePath), showFlags);
 }
 
 /// <summary>
-/// 
+/// Called when a user opens lister with F3 or the Quick View Panel with Ctrl+Q, and when the definition string either doesn't exist, or its evaluation returns true.
 /// </summary>
-HWND __stdcall ListLoadW(HWND hWnd, WCHAR * filePath, int)
+HWND __stdcall ListLoadW(HWND hWnd, WCHAR * filePath, int showFlags)
 {
-    _Console.Create(hWnd);
+    _Console.Create(hWnd, showFlags & lcp_darkmode);
     _Console.SetFont(_hFontGUI);
 
     ProcessItem(filePath);
@@ -88,7 +90,9 @@ HWND __stdcall ListLoadW(HWND hWnd, WCHAR * filePath, int)
 /// </summary>
 int __stdcall ListLoadNext(HWND hWnd, HWND ListWin, char * filePath, int showFlags)
 {
-    WCHAR FilePathW[wdirtypemax];
+    WCHAR FilePathW[MAX_PATH];
+
+    ::MultiByteToWideChar(CP_ACP, 0, filePath, -1, FilePathW, _countof(FilePathW) - 1);
 
     return ListLoadNextW(hWnd, ListWin, awfilenamecopy(FilePathW, filePath), showFlags);
 }
@@ -142,10 +146,28 @@ int _stdcall ListSearchDialog(HWND hWnd, int FindNext)
 }
 
 /// <summary>
-/// 
+/// Called when the parent window receives a notification message from the child window.
 /// </summary>
 int __stdcall ListNotificationReceived(HWND hWnd, int msg, WPARAM wParam, LPARAM lParam)
 {
+    if (msg != WM_COMMAND)
+        return 0;
+
+    if (HIWORD(wParam) != EN_UPDATE)
+        return 9;
+
+    int LineCount = ::SendMessageW(hWnd, EM_GETLINECOUNT, 0, 0);
+
+    if (LineCount > 0)
+    {
+        int FirstVisibleLine = ::SendMessageW(hWnd, EM_GETFIRSTVISIBLELINE, 0, 0);
+
+        int Percentage = ::MulDiv(FirstVisibleLine, 100, LineCount);
+
+        // Set the percentage in the Lister title bar.
+        //::PostMessageW(::GetParent(hWnd), WM_COMMAND, MAKEWPARAM(Percentage, itm_percent), (LPARAM) hWnd);
+    }
+
     return 0;
 }
 

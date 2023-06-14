@@ -22,8 +22,6 @@
 
 The code builds out-of-the box with Visual Studio.
 
-### Requirements
-
 To build the code you need:
 
 * [Microsoft Visual Studio 2022 Community Edition](https://visualstudio.microsoft.com/downloads/) or later
@@ -67,7 +65,7 @@ v0.1.0, 2023-06-14, *"Scratchin' the itch"*
   * [Desktop App User Interface](https://learn.microsoft.com/en-us/windows/win32/windows-application-ui-development)
   * [Windows User Experience Interaction Guidelines](https://learn.microsoft.com/en-us/windows/win32/uxguide/guidelines)
   * [Windows Controls](https://learn.microsoft.com/en-us/windows/win32/controls/window-controls)
-      * [RichEdit](https://learn.microsoft.com/en-us/windows/win32/controls/rich-edit-controls)
+    * [RichEdit](https://learn.microsoft.com/en-us/windows/win32/controls/rich-edit-controls)
   * [Control Library](https://learn.microsoft.com/en-us/windows/win32/controls/individual-control-info)
   * [Resource-Definition Statements](https://learn.microsoft.com/en-us/windows/win32/menurc/resource-definition-statements)
   * [Visuals, Layout](https://learn.microsoft.com/en-us/windows/win32/uxguide/vis-layout)

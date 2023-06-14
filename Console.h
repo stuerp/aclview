@@ -6,11 +6,11 @@
 class Console
 {
 public:
-    void Create(HWND hWnd) noexcept;
+    void Create(HWND hWnd, bool darkMode) noexcept;
 
     void Show() const noexcept { ::ShowWindow(_hRichEdit, SW_SHOW); }
 
-    void Clear() const noexcept { ::SetWindowText(_hRichEdit, ""); }
+    void Clear() const noexcept { ::SetWindowTextW(_hRichEdit, L""); }
 
     void Write(LPCWSTR format, ...) const noexcept;
 
@@ -33,6 +33,7 @@ public:
     void ScrollToTop() const noexcept { ::SendMessageW(_hRichEdit, WM_VSCROLL, SB_TOP, 0L); }
 
 private:
+    // 20 twips / printer's point; 72 printer's points / inch; 1440 twips / inch.
     LONG InchToTwips(float inch) const { return (LONG)(1440.f * inch); }
 
 private:

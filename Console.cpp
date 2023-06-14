@@ -9,7 +9,16 @@
 
 #include "Console.h"
 
-void Console::Create(HWND hWnd) noexcept
+#include <Uxtheme.h>
+#include <dwmapi.h>
+
+#pragma comment(lib, "uxtheme.lib")
+#pragma comment(lib, "dwmapi.lib")
+
+/// <summary>
+/// Creates the console.
+/// </summary>
+void Console::Create(HWND hWnd, bool darkMode) noexcept
 {
     RECT cr;
 
@@ -31,21 +40,7 @@ void Console::Create(HWND hWnd) noexcept
     ::SendMessageW(_hRichEdit, EM_SETMARGINS, EC_LEFTMARGIN, 8);
     ::SendMessageW(_hRichEdit, EM_SETEVENTMASK, 0, ENM_UPDATE); // ENM_SCROLL doesn't work for thumb movements.
 
-    SetBackgroundColor(::GetSysColor(COLOR_3DFACE));
-
-    /** Set the tab stops. Each tab stop is expressed in twips: 20 twips / printer's point; 72 printer's points / inch; 1440 twips / inch. **/
-    {
-        PARAFORMAT2 pf;
-
-        pf.cbSize     = sizeof(pf);
-        pf.dwMask     = PFM_TABSTOPS;
-        pf.cTabCount  = 3;
-        pf.rgxTabs[0] = 180;
-        pf.rgxTabs[1] = 200 * 8;
-        pf.rgxTabs[2] = 200 * 8;
-
-        ::SendMessageW(_hRichEdit, EM_SETPARAFORMAT, 0, (LPARAM) &pf);
-    }
+    SetBackgroundColor(darkMode ? RGB(31, 31, 31) : ::GetSysColor(COLOR_3DFACE));
 
     ::PostMessageW(hWnd, WM_COMMAND, MAKEWPARAM(lcp_ansi, itm_fontstyle), (LPARAM) _hRichEdit);
 }
