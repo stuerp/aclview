@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClInclude Include="framework.h" />
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="listplug.h" />
+    <ClInclude Include="cunicode.h" />
+    <ClInclude Include="Resources.h" />
+    <ClInclude Include="BaseWindow.h" />
+    <ClInclude Include="Control.h" />
+    <ClInclude Include="Support.h" />
+    <ClInclude Include="Console.h" />
+    <ClInclude Include="ShowSecurityDescriptor.h" />
+    <ClInclude Include="ShowSID.h" />
+    <ClInclude Include="ShowACL.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="pch.cpp" />
+    <ClCompile Include="cunicode.cpp" />
+    <ClCompile Include="BaseWindow.cpp" />
+    <ClCompile Include="Control.cpp" />
+    <ClCompile Include="Support.cpp" />
+    <ClCompile Include="Console.cpp" />
+    <ClCompile Include="ShowACL.cpp" />
+    <ClCompile Include="ShowSID.cpp" />
+    <ClCompile Include="ShowSecurityDescriptor.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="listplug.def" />
+    <None Include="README.md" />
+    <None Include=".gitattributes" />
+    <None Include=".gitignore" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Resources.rc" />
+  </ItemGroup>
+</Project>
