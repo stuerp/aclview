@@ -51,6 +51,10 @@ branch. Pull requests are warmly welcome.
 
 ## Change Log
 
+v0.2.0, 2023-xx-xx, *""*
+
+* Changed: Implemented percentage display for the Lister window menu bar.
+
 v0.1.0, 2023-06-14, *"Scratchin' the itch"*
 
 * Initial release.

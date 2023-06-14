@@ -28,8 +28,6 @@ static BOOL OnProcessAttach();
 static BOOL OnProcessDetach();
 static void ProcessItem(const wstring & filePath);
 
-static LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
-
 /// <summary>
 /// Entry Point
 /// </summary>
@@ -98,7 +96,7 @@ int __stdcall ListLoadNext(HWND hWnd, HWND ListWin, char * filePath, int showFla
 }
 
 /// <summary>
-/// 
+/// Called when a user switches to the next or previous file in lister with 'n' or 'p' keys, or goes to the next/previous file in the Quick View Panel, and when the definition string either doesn't exist, or its evaluation returns true.
 /// </summary>
 int __stdcall ListLoadNextW(HWND ParentWin, HWND ListWin, WCHAR * filePath, int)
 {
@@ -114,7 +112,7 @@ void __stdcall ListCloseWindow(HWND hWnd)
 }
 
 /// <summary>
-/// 
+/// Called when the user changes some options in Lister's menu.
 /// </summary>
 int __stdcall ListSendCommand(HWND hWnd, int command, int parameter)
 {
@@ -122,7 +120,7 @@ int __stdcall ListSendCommand(HWND hWnd, int command, int parameter)
 }
 
 /// <summary>
-/// 
+/// Called when the user chooses the print function.
 /// </summary>
 int __stdcall ListPrint(HWND hWnd, char * filePath, char * printerName, int printerFlags, RECT * margins)
 {
@@ -130,19 +128,88 @@ int __stdcall ListPrint(HWND hWnd, char * filePath, char * printerName, int prin
 }
 
 /// <summary>
-/// 
+/// Called when the user tries to find text in the plugin.
 /// </summary>
 int _stdcall ListSearchText(HWND hWnd, char * searchString, int searchParameter)
 {
+    if (searchString == nullptr)
+        return LISTPLUGIN_ERROR;
+
+    if (searchString[0] == '\0')
+        return LISTPLUGIN_ERROR;
+
+    int FirstVisibleLine = (int) ::SendMessageW(hWnd, EM_GETFIRSTVISIBLELINE, 0, 0);
+
+    int StartPos;
+
+    if (searchParameter & lcs_findfirst)
+    {
+        //Find first: Start at top visible line
+        StartPos = (int) ::SendMessageW(hWnd, EM_LINEINDEX, FirstVisibleLine, 0);
+
+        ::SendMessageW(hWnd, EM_SETSEL, StartPos, StartPos);
+    }
+    else
+    {
+        //Find next: Start at current selection + 1
+        ::SendMessageW(hWnd, EM_GETSEL, (WPARAM) &StartPos, 0);
+
+        StartPos += 1;
+    }
+
+    FINDTEXTW ft;
+
+    ft.chrg.cpMin = StartPos;
+    ft.chrg.cpMax = (LONG) ::SendMessageW(hWnd, WM_GETTEXTLENGTH, 0, 0);
+
+    int Flags = 0;
+
+    if (searchParameter & lcs_wholewords)
+        Flags |= FR_WHOLEWORD;
+
+    if (searchParameter & lcs_matchcase)
+        Flags |= FR_MATCHCASE;
+
+    if (!(searchParameter & lcs_backwards))
+        Flags |= FR_DOWN;
+
+    WCHAR SearchStringW[1024];
+
+    ::MultiByteToWideChar(CP_ACP, 0, searchString, -1, SearchStringW, _countof(SearchStringW) - 1);
+
+    ft.lpstrText = SearchStringW;
+
+    int TextHead = (int) ::SendMessageW(hWnd, EM_FINDTEXT, Flags, (LPARAM) &ft);
+
+    if (TextHead != -1)
+    {
+        int TextTail = TextHead + (int) ::strlen(searchString);
+
+        ::SendMessageW(hWnd, EM_SETSEL, TextHead, TextTail);
+
+        int LineIndex = (int) ::SendMessageW(hWnd, EM_LINEFROMCHAR, TextHead, 0) - 3;
+
+        if (LineIndex < 0)
+            LineIndex = 0;
+
+        LineIndex -= FirstVisibleLine;
+
+        ::SendMessageW(hWnd, EM_LINESCROLL, 0, LineIndex);
+
+        return LISTPLUGIN_OK;
+    }
+    else
+        ::SendMessageW(hWnd, EM_SETSEL, -1, -1);  // Restart search at the beginning
+
     return LISTPLUGIN_ERROR;
 }
 
 /// <summary>
-/// 
+/// Called when the user tries to find text in the plugin.
 /// </summary>
 int _stdcall ListSearchDialog(HWND hWnd, int FindNext)
 {
-    return LISTPLUGIN_ERROR;
+    return LISTPLUGIN_ERROR; // Total Commander should show its own text search dialog.
 }
 
 /// <summary>
@@ -156,16 +223,16 @@ int __stdcall ListNotificationReceived(HWND hWnd, int msg, WPARAM wParam, LPARAM
     if (HIWORD(wParam) != EN_UPDATE)
         return 9;
 
-    int LineCount = ::SendMessageW(hWnd, EM_GETLINECOUNT, 0, 0);
+    int LineCount = (int) ::SendMessageW(hWnd, EM_GETLINECOUNT, 0, 0);
 
     if (LineCount > 0)
     {
-        int FirstVisibleLine = ::SendMessageW(hWnd, EM_GETFIRSTVISIBLELINE, 0, 0);
+        int FirstVisibleLine = (int) ::SendMessageW(hWnd, EM_GETFIRSTVISIBLELINE, 0, 0);
 
         int Percentage = ::MulDiv(FirstVisibleLine, 100, LineCount);
 
         // Set the percentage in the Lister title bar.
-        //::PostMessageW(::GetParent(hWnd), WM_COMMAND, MAKEWPARAM(Percentage, itm_percent), (LPARAM) hWnd);
+        ::PostMessageW(::GetParent(hWnd), WM_COMMAND, MAKEWPARAM(Percentage, itm_percent), (LPARAM) hWnd);
     }
 
     return 0;
@@ -181,7 +248,7 @@ void __stdcall ListSetDefaultParams(ListDefaultParamStruct * dps)
 }
 
 /// <summary>
-/// 
+/// Called when the plugin gets loaded.
 /// </summary>
 static BOOL OnProcessAttach()
 {
@@ -230,7 +297,7 @@ static BOOL OnProcessAttach()
 }
 
 /// <summary>
-/// 
+/// Called when the plugin gets unloaded.
 /// </summary>
 static BOOL OnProcessDetach()
 {
@@ -250,7 +317,7 @@ static BOOL OnProcessDetach()
 }
 
 /// <summary>
-/// 
+/// Processes the specified item.
 /// </summary>
 static void ProcessItem(const wstring & pathName)
 {
