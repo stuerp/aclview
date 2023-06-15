@@ -4,7 +4,6 @@
     <ClInclude Include="framework.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="listplug.h" />
-    <ClInclude Include="cunicode.h" />
     <ClInclude Include="Resources.h" />
     <ClInclude Include="BaseWindow.h" />
     <ClInclude Include="Control.h" />
@@ -17,7 +16,6 @@
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="pch.cpp" />
-    <ClCompile Include="cunicode.cpp" />
     <ClCompile Include="BaseWindow.cpp" />
     <ClCompile Include="Control.cpp" />
     <ClCompile Include="Support.cpp" />

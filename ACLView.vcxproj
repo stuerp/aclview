@@ -179,7 +179,6 @@
     <ClInclude Include="BaseWindow.h" />
     <ClInclude Include="Console.h" />
     <ClInclude Include="Control.h" />
-    <ClInclude Include="cunicode.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="listplug.h" />
     <ClInclude Include="pch.h" />
@@ -193,7 +192,6 @@
     <ClCompile Include="BaseWindow.cpp" />
     <ClCompile Include="Console.cpp" />
     <ClCompile Include="Control.cpp" />
-    <ClCompile Include="cunicode.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

@@ -19,6 +19,7 @@ public:
 
     void Show() const noexcept { ::ShowWindow(_hRichEdit, SW_SHOW); }
     void Hide() const noexcept { ::ShowWindow(_hRichEdit, SW_HIDE); }
+    void Redraw() const noexcept { ::RedrawWindow(_hRichEdit, nullptr, 0, RDW_INVALIDATE | RDW_NOERASE); }
 
     void Clear() const noexcept { ::SetWindowTextW(_hRichEdit, L""); }
 

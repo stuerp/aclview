@@ -53,6 +53,7 @@ v0.2.0, 2023-xx-xx, *""*
 
 * Implemented percentage display for the Lister window menu bar.
 * The text can be searched using the default search feature of the Lister.
+* The content gets updated when switching between items in Quick View mode.
 
 v0.1.0, 2023-06-14, *"Scratchin' the itch"*
 

@@ -1,5 +1,5 @@
 
-/** dllmain.cpp (2023.06.14) P. Stuer **/
+/** dllmain.cpp (2023.06.15) P. Stuer **/
 
 #include "pch.h"
 
@@ -60,7 +60,7 @@ HWND __stdcall ListLoad(HWND hWnd, char * filePath, int showFlags)
 
     ::MultiByteToWideChar(CP_ACP, 0, filePath, -1, FilePathW, _countof(FilePathW) - 1);
 
-    return ListLoadW(hWnd, awfilenamecopy(FilePathW, filePath), showFlags);
+    return ListLoadW(hWnd, FilePathW, showFlags);
 }
 
 /// <summary>
@@ -92,7 +92,7 @@ int __stdcall ListLoadNext(HWND hWnd, HWND ListWin, char * filePath, int showFla
 
     ::MultiByteToWideChar(CP_ACP, 0, filePath, -1, FilePathW, _countof(FilePathW) - 1);
 
-    return ListLoadNextW(hWnd, ListWin, awfilenamecopy(FilePathW, filePath), showFlags);
+    return ListLoadNextW(hWnd, ListWin, FilePathW, showFlags);
 }
 
 /// <summary>
@@ -109,7 +109,8 @@ int __stdcall ListLoadNextW(HWND hParentWnd, HWND hWnd, WCHAR * filePath, int)
     _Console.Show();
 
     ::SendMessageA(hParentWnd, WM_SETREDRAW, TRUE, 0);
-    ::RedrawWindow(_Console.Handle(), nullptr, 0, RDW_INVALIDATE | RDW_NOERASE);
+
+    _Console.Redraw();
 
     return LISTPLUGIN_OK;
 }
