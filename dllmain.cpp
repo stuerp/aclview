@@ -100,11 +100,16 @@ int __stdcall ListLoadNext(HWND hWnd, HWND ListWin, char * filePath, int showFla
 /// </summary>
 int __stdcall ListLoadNextW(HWND hParentWnd, HWND hWnd, WCHAR * filePath, int)
 {
+    ::SendMessageA(hParentWnd, WM_SETREDRAW, FALSE, 0);
+
     _Console.Hide();
 
     ProcessItem(filePath);
 
     _Console.Show();
+
+    ::SendMessageA(hParentWnd, WM_SETREDRAW, TRUE, 0);
+    ::RedrawWindow(_Console.Handle(), nullptr, 0, RDW_INVALIDATE | RDW_NOERASE);
 
     return LISTPLUGIN_OK;
 }
@@ -164,7 +169,7 @@ int __stdcall ListSendCommand(HWND hWnd, int command, int parameter)
             FirstVisibleLine = (int) ::SendMessageW(hWnd, EM_GETFIRSTVISIBLELINE, 0, 0);
 
             // Place caret on first visible line!
-            int FirstChar = ::SendMessageW(hWnd, EM_LINEINDEX, FirstVisibleLine, 0);
+            int FirstChar = (int) ::SendMessageW(hWnd, EM_LINEINDEX, FirstVisibleLine, 0);
 
             ::SendMessageW(hWnd, EM_SETSEL, FirstChar, FirstChar);
 
