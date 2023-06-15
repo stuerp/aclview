@@ -49,11 +49,12 @@ branch. Pull requests are warmly welcome.
 
 ## Change Log
 
-v0.2.0, 2023-xx-xx, *""*
+v0.2.0, 2023-06-15, *"A small step"*
 
 * Implemented percentage display for the Lister window menu bar.
 * The text can be searched using the default search feature of the Lister.
 * The content gets updated when switching between items in Quick View mode.
+* Improved: Optimized text highlighting.
 
 v0.1.0, 2023-06-14, *"Scratchin' the itch"*
 
