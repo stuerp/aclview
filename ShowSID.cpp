@@ -1,5 +1,5 @@
 
-/** ShowSID.cpp (2023.06.14) P. Stuer **/
+/** ShowSID.cpp (2023.06.15) P. Stuer **/
 
 #include "pch.h"
 
@@ -40,14 +40,7 @@ HRESULT ShowSID(const PSID sid)
         _Console.SetBullet(true);
 
         _Console.Write(L"SID: \"");
-        _Console.SetTextForeColor(GetSysColor(COLOR_HIGHLIGHT));
-
-        if (DomainName[0])
-            _Console.Write(L"%s\\%s", DomainName, AccountName);
-        else
-            _Console.Write(L"%s", AccountName);
-
-        _Console.ResetTextColor();
+        _Console.Write((DomainName[0] ? L"%s\\%s" : L"%s"), DomainName, AccountName);
         _Console.Write(L"\", %s, %s\n", AccountSidString, GetSidNameUseDescription(SidNameUse));
 
         _Console.SetBullet(false);

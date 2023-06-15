@@ -41,6 +41,7 @@ public:
     void IncreaseIndent() const noexcept;
     void DecreaseIndent() const noexcept;
 
+    void Select(int from, int to) const noexcept { ::SendMessageW(_hRichEdit, EM_SETSEL, (WPARAM) from, to); }
     void ScrollToTop() const noexcept { ::SendMessageW(_hRichEdit, WM_VSCROLL, SB_TOP, 0L); }
 
 private:

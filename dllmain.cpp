@@ -288,7 +288,7 @@ int __stdcall ListNotificationReceived(HWND hWnd, int msg, WPARAM wParam, LPARAM
         return 0;
 
     if (HIWORD(wParam) != EN_UPDATE)
-        return 9;
+        return 0;
 
     int LineCount = (int) ::SendMessageW(hWnd, EM_GETLINECOUNT, 0, 0);
 
@@ -398,10 +398,7 @@ static void ProcessItem(const wstring & pathName)
     ObjectType ObjectType = ((FileAttributes & FILE_ATTRIBUTE_DIRECTORY) && !(FileAttributes & FILE_ATTRIBUTE_REPARSE_POINT)) ? DirectoryObject : FileObject;
 
     _Console.SetBold(true);
-    _Console.Write(L"Item: \"");
-    _Console.SetTextForeColor(GetSysColor(COLOR_HIGHLIGHT));
-    _Console.Write(pathName.c_str());
-    _Console.Write(L"\"\n", pathName.c_str());
+    _Console.Write(L"Item: \"%s\"\n", pathName.c_str());
 
     // Low-level Security Descriptor Functions, https://msdn.microsoft.com/en-us/library/aa379204(v=vs.85).aspx
     const SECURITY_INFORMATION RequestedInformation = OWNER_SECURITY_INFORMATION | GROUP_SECURITY_INFORMATION | DACL_SECURITY_INFORMATION;
@@ -479,5 +476,30 @@ static void ProcessItem(const wstring & pathName)
     if (sd)
         ::LocalFree(sd);
 
+    // Highlight any quoted text.
+    {
+        FINDTEXTW ft = { { 0, (LONG) ::SendMessageW(_Console.Handle(), WM_GETTEXTLENGTH, 0, 0) }, L"\"" };
+
+        int OpeningQuote = (int) ::SendMessageW(_Console.Handle(), EM_FINDTEXT, (WPARAM) FR_DOWN, (LPARAM) &ft);
+
+        while (OpeningQuote != -1)
+        {
+            ft.chrg.cpMin = ++OpeningQuote;
+
+            int ClosingQuote = (int) ::SendMessageW(_Console.Handle(), EM_FINDTEXT, (WPARAM) FR_DOWN, (LPARAM) &ft);
+
+            if (ClosingQuote == -1)
+                break;
+
+            _Console.Select(OpeningQuote, ClosingQuote);
+            _Console.SetTextForeColor(::GetSysColor(COLOR_HIGHLIGHT));
+
+            ft.chrg.cpMin = ClosingQuote + 1;
+
+            OpeningQuote = (int) ::SendMessageW(_Console.Handle(), EM_FINDTEXT, (WPARAM) FR_DOWN, (LPARAM) &ft);
+        }
+    }
+
     _Console.ScrollToTop();
+    _Console.Select(0, 0);
 }
