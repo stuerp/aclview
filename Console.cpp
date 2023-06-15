@@ -24,7 +24,7 @@ void Console::Create(HWND hWnd, bool wordwrap, bool darkMode) noexcept
 
     ::GetClientRect(hWnd, &cr);
 
-    const DWORD Style = WS_CHILD | (wordwrap ? 0 : WS_HSCROLL) | WS_VSCROLL | ES_MULTILINE | ES_READONLY | ES_NOHIDESEL;
+    const DWORD Style = WS_CHILD | (wordwrap ? (DWORD) 0 : WS_HSCROLL) | WS_VSCROLL | ES_MULTILINE | ES_READONLY | ES_NOHIDESEL;
 
     _hRichEdit = ::CreateWindowExW(0, MSFTEDIT_CLASS, L"", Style, cr.left, cr.top, cr.right - cr.left, cr.bottom - cr.top, hWnd, NULL, ::GetModuleHandleW(NULL), NULL);
 
@@ -81,9 +81,8 @@ void Console::SetFont(HFONT hFont) const noexcept
 /// </summary>
 void Console::SetTextForeColor(COLORREF color) const noexcept
 {
-    CHARFORMAT cf;
+    CHARFORMAT cf = { sizeof(cf) };
 
-    cf.cbSize      = sizeof(cf);
     cf.dwMask      = CFM_COLOR;
     cf.crTextColor = color;
     cf.dwEffects   = 0;
@@ -96,9 +95,8 @@ void Console::SetTextForeColor(COLORREF color) const noexcept
 /// </summary>
 void Console::SetTextBackColor(COLORREF color) const noexcept
 {
-    CHARFORMAT cf;
+    CHARFORMAT cf = { sizeof(cf) };
 
-    cf.cbSize      = sizeof(cf);
     cf.dwMask      = CFM_BACKCOLOR;
     cf.crTextColor = color;
     cf.dwEffects   = 0;
@@ -111,9 +109,8 @@ void Console::SetTextBackColor(COLORREF color) const noexcept
 /// </summary>
 void Console::ResetTextColor() const noexcept
 {
-    CHARFORMAT cf;
+    CHARFORMAT cf = { sizeof(cf) };
 
-    cf.cbSize     = sizeof(cf);
     cf.dwMask    = CFM_COLOR;
     cf.dwEffects = CFE_AUTOCOLOR;
 
@@ -125,9 +122,8 @@ void Console::ResetTextColor() const noexcept
 /// </summary>
 void Console::SetBold(bool enabled) const noexcept
 {
-    CHARFORMAT cf;
+    CHARFORMAT cf = { sizeof(cf) };
 
-    cf.cbSize    = sizeof(cf);
     cf.dwMask    = CFM_BOLD;
     cf.dwEffects = (DWORD)(enabled ? CFE_BOLD : 0);
 
@@ -139,9 +135,8 @@ void Console::SetBold(bool enabled) const noexcept
 /// </summary>
 void Console::SetItalic(bool enabled) const noexcept
 {
-    CHARFORMAT cf;
+    CHARFORMAT cf = { sizeof(cf) };
 
-    cf.cbSize    = sizeof(cf);
     cf.dwMask    = CFM_ITALIC;
     cf.dwEffects = (DWORD)(enabled ? CFE_ITALIC : 0);
 
@@ -153,9 +148,8 @@ void Console::SetItalic(bool enabled) const noexcept
 /// </summary>
 void Console::SetBullet(bool enabled) const noexcept
 {
-    PARAFORMAT pf;
+    PARAFORMAT pf = { sizeof(pf) };
 
-    pf.cbSize     = sizeof(pf);
     pf.dwMask     = PFM_NUMBERING;
     pf.wNumbering = (DWORD)(enabled ? PFN_BULLET : 0);
 
@@ -167,9 +161,8 @@ void Console::SetBullet(bool enabled) const noexcept
 /// </summary>
 void Console::IncreaseIndent() const noexcept
 {
-    PARAFORMAT pf;
+    PARAFORMAT pf = { sizeof(pf) };
 
-    pf.cbSize        = sizeof(pf);
     pf.dwMask        = PFM_OFFSETINDENT;
     pf.dxStartIndent = InchToTwips(.25f);
 
@@ -181,9 +174,8 @@ void Console::IncreaseIndent() const noexcept
 /// </summary>
 void Console::DecreaseIndent() const noexcept
 {
-    PARAFORMAT pf;
+    PARAFORMAT pf = { sizeof(pf) };
 
-    pf.cbSize        = sizeof(pf);
     pf.dwMask        = PFM_OFFSETINDENT;
     pf.dxStartIndent = InchToTwips(-.25f);
 

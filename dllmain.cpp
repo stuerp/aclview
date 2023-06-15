@@ -5,7 +5,7 @@
 
 #include <CppCoreCheck/Warnings.h>
 
-#pragma warning(disable: 4710 4711 ALL_CPPCORECHECK_WARNINGS)
+#pragma warning(disable: 4710 4711 5045 ALL_CPPCORECHECK_WARNINGS)
 
 #include "Resources.h"
 #include "Control.h"
@@ -31,7 +31,7 @@ static void ProcessItem(const wstring & filePath);
 /// <summary>
 /// Entry Point
 /// </summary>
-BOOL APIENTRY DllMain(HANDLE hModule, DWORD reason, LPVOID)
+BOOL APIENTRY DllMain(HANDLE, DWORD reason, LPVOID)
 {
     switch (reason)
     {
@@ -98,7 +98,7 @@ int __stdcall ListLoadNext(HWND hWnd, HWND ListWin, char * filePath, int showFla
 /// <summary>
 /// Called when a user switches to the next or previous file in lister with 'n' or 'p' keys, or goes to the next/previous file in the Quick View Panel, and when the definition string either doesn't exist, or its evaluation returns true.
 /// </summary>
-int __stdcall ListLoadNextW(HWND hParentWnd, HWND hWnd, WCHAR * filePath, int)
+int __stdcall ListLoadNextW(HWND hParentWnd, HWND, WCHAR * filePath, int)
 {
     ::SendMessageA(hParentWnd, WM_SETREDRAW, FALSE, 0);
 
@@ -165,14 +165,14 @@ int __stdcall ListSendCommand(HWND hWnd, int command, int parameter)
 
             int FirstVisibleLine = (int) ::SendMessageW(hWnd, EM_GETFIRSTVISIBLELINE, 0, 0);
 
-            ::SendMessageW(hWnd, EM_LINESCROLL, 0, Line - FirstVisibleLine);
+            ::SendMessageW(hWnd, EM_LINESCROLL, 0, (LPARAM) Line - FirstVisibleLine);
 
             FirstVisibleLine = (int) ::SendMessageW(hWnd, EM_GETFIRSTVISIBLELINE, 0, 0);
 
             // Place caret on first visible line!
-            int FirstChar = (int) ::SendMessageW(hWnd, EM_LINEINDEX, FirstVisibleLine, 0);
+            int FirstChar = (int) ::SendMessageW(hWnd, EM_LINEINDEX, (WPARAM) FirstVisibleLine, 0);
 
-            ::SendMessageW(hWnd, EM_SETSEL, FirstChar, FirstChar);
+            ::SendMessageW(hWnd, EM_SETSEL, (WPARAM) FirstChar, FirstChar);
 
             int Percentage = ::MulDiv(FirstVisibleLine, 100, LineCount);
 
@@ -191,7 +191,7 @@ int __stdcall ListSendCommand(HWND hWnd, int command, int parameter)
 /// </summary>
 int __stdcall ListPrint(HWND hWnd, char * filePath, char * printerName, int printerFlags, RECT * margins)
 {
-    return 0;
+    return LISTPLUGIN_ERROR;
 }
 
 /// <summary>
@@ -212,9 +212,9 @@ int _stdcall ListSearchText(HWND hWnd, char * searchString, int searchParameter)
     if (searchParameter & lcs_findfirst)
     {
         //Find first: Start at top visible line
-        StartPos = (int) ::SendMessageW(hWnd, EM_LINEINDEX, FirstVisibleLine, 0);
+        StartPos = (int) ::SendMessageW(hWnd, EM_LINEINDEX, (WPARAM) FirstVisibleLine, 0);
 
-        ::SendMessageW(hWnd, EM_SETSEL, StartPos, StartPos);
+        ::SendMessageW(hWnd, EM_SETSEL, (WPARAM) StartPos, StartPos);
     }
     else
     {
@@ -224,7 +224,7 @@ int _stdcall ListSearchText(HWND hWnd, char * searchString, int searchParameter)
         StartPos += 1;
     }
 
-    FINDTEXTW ft;
+    FINDTEXTW ft = { { 0 }, 0 };
 
     ft.chrg.cpMin = StartPos;
     ft.chrg.cpMax = (LONG) ::SendMessageW(hWnd, WM_GETTEXTLENGTH, 0, 0);
@@ -246,15 +246,15 @@ int _stdcall ListSearchText(HWND hWnd, char * searchString, int searchParameter)
 
     ft.lpstrText = SearchStringW;
 
-    int TextHead = (int) ::SendMessageW(hWnd, EM_FINDTEXT, Flags, (LPARAM) &ft);
+    int TextHead = (int) ::SendMessageW(hWnd, EM_FINDTEXT, (WPARAM) Flags, (LPARAM) &ft);
 
     if (TextHead != -1)
     {
         int TextTail = TextHead + (int) ::strlen(searchString);
 
-        ::SendMessageW(hWnd, EM_SETSEL, TextHead, TextTail);
+        ::SendMessageW(hWnd, EM_SETSEL, (WPARAM) TextHead, TextTail);
 
-        int LineIndex = (int) ::SendMessageW(hWnd, EM_LINEFROMCHAR, TextHead, 0) - 3;
+        int LineIndex = (int) ::SendMessageW(hWnd, EM_LINEFROMCHAR, (WPARAM) TextHead, 0) - 3;
 
         if (LineIndex < 0)
             LineIndex = 0;
@@ -266,7 +266,7 @@ int _stdcall ListSearchText(HWND hWnd, char * searchString, int searchParameter)
         return LISTPLUGIN_OK;
     }
     else
-        ::SendMessageW(hWnd, EM_SETSEL, -1, -1);  // Restart search at the beginning
+        ::SendMessageW(hWnd, EM_SETSEL, (WPARAM) -1, -1);  // Restart search at the beginning
 
     return LISTPLUGIN_ERROR;
 }
@@ -274,7 +274,7 @@ int _stdcall ListSearchText(HWND hWnd, char * searchString, int searchParameter)
 /// <summary>
 /// Called when the user tries to find text in the plugin.
 /// </summary>
-int _stdcall ListSearchDialog(HWND hWnd, int FindNext)
+int _stdcall ListSearchDialog(HWND, int)
 {
     return LISTPLUGIN_ERROR; // Total Commander should show its own text search dialog.
 }
@@ -282,7 +282,7 @@ int _stdcall ListSearchDialog(HWND hWnd, int FindNext)
 /// <summary>
 /// Called when the parent window receives a notification message from the child window.
 /// </summary>
-int __stdcall ListNotificationReceived(HWND hWnd, int msg, WPARAM wParam, LPARAM lParam)
+int __stdcall ListNotificationReceived(HWND hWnd, int msg, WPARAM wParam, LPARAM)
 {
     if (msg != WM_COMMAND)
         return 0;
@@ -320,10 +320,9 @@ void __stdcall ListSetDefaultParams(ListDefaultParamStruct * dps)
 static BOOL OnProcessAttach()
 {
     {
-        INITCOMMONCONTROLSEX icc;
+        INITCOMMONCONTROLSEX icc = { sizeof(icc) };
 
-        icc.dwSize = sizeof(icc);
-        icc.dwICC  = ICC_STANDARD_CLASSES | ICC_TAB_CLASSES | ICC_UPDOWN_CLASS | ICC_USEREX_CLASSES;
+        icc.dwICC = ICC_STANDARD_CLASSES | ICC_TAB_CLASSES | ICC_UPDOWN_CLASS | ICC_USEREX_CLASSES;
 
         ::InitCommonControlsEx(&icc);
     }
@@ -351,9 +350,7 @@ static BOOL OnProcessAttach()
 
     // Create the GUI font (based on the menu font).
     {
-        NONCLIENTMETRICS nm;
-
-        nm.cbSize = sizeof(nm);
+        NONCLIENTMETRICS nm = { sizeof(nm) };
 
         ::SystemParametersInfo(SPI_GETNONCLIENTMETRICS, nm.cbSize, &nm, 0);
 

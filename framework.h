@@ -1,5 +1,5 @@
 
-/** $VER: framework.h (2023.06.14) P. Stuer **/
+/** $VER: framework.h (2023.06.15) P. Stuer **/
 
 #pragma once
 
@@ -43,4 +43,4 @@
 #include <stdexcept>
 
 #include "listplug.h"
-#include "cunicode.h"
+
