@@ -1,14 +1,24 @@
 
-/** Console.h (2023.06.14) P. Stuer **/
+/** Console.h (2023.06.15) P. Stuer **/
 
 #pragma once
 
 class Console
 {
 public:
-    void Create(HWND hWnd, bool darkMode) noexcept;
+    void Create(HWND hWnd, bool wordrap, bool darkMode) noexcept;
+
+    void Delete() noexcept
+    {
+        if (_hRichEdit)
+        {
+            ::DestroyWindow(_hRichEdit);
+            _hRichEdit = 0;
+        }
+    }
 
     void Show() const noexcept { ::ShowWindow(_hRichEdit, SW_SHOW); }
+    void Hide() const noexcept { ::ShowWindow(_hRichEdit, SW_HIDE); }
 
     void Clear() const noexcept { ::SetWindowTextW(_hRichEdit, L""); }
 

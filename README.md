@@ -20,8 +20,6 @@
 
 ## Developing
 
-The code builds out-of-the box with Visual Studio.
-
 To build the code you need:
 
 * [Microsoft Visual Studio 2022 Community Edition](https://visualstudio.microsoft.com/downloads/) or later
@@ -53,7 +51,8 @@ branch. Pull requests are warmly welcome.
 
 v0.2.0, 2023-xx-xx, *""*
 
-* Changed: Implemented percentage display for the Lister window menu bar.
+* Implemented percentage display for the Lister window menu bar.
+* The text can be searched using the default search feature of the Lister.
 
 v0.1.0, 2023-06-14, *"Scratchin' the itch"*
 

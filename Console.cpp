@@ -1,5 +1,5 @@
 
-/** Console.cpp (2023.06.14) P. Stuer **/
+/** Console.cpp (2023.06.15) P. Stuer **/
 
 #include "pch.h"
 
@@ -18,13 +18,13 @@
 /// <summary>
 /// Creates the console.
 /// </summary>
-void Console::Create(HWND hWnd, bool darkMode) noexcept
+void Console::Create(HWND hWnd, bool wordwrap, bool darkMode) noexcept
 {
     RECT cr;
 
     ::GetClientRect(hWnd, &cr);
 
-    const DWORD Style = WS_CHILD | ES_MULTILINE | ES_READONLY | WS_HSCROLL | WS_VSCROLL | ES_NOHIDESEL;
+    const DWORD Style = WS_CHILD | (wordwrap ? 0 : WS_HSCROLL) | WS_VSCROLL | ES_MULTILINE | ES_READONLY | ES_NOHIDESEL;
 
     _hRichEdit = ::CreateWindowExW(0, MSFTEDIT_CLASS, L"", Style, cr.left, cr.top, cr.right - cr.left, cr.bottom - cr.top, hWnd, NULL, ::GetModuleHandleW(NULL), NULL);
 

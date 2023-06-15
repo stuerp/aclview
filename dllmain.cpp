@@ -68,7 +68,7 @@ HWND __stdcall ListLoad(HWND hWnd, char * filePath, int showFlags)
 /// </summary>
 HWND __stdcall ListLoadW(HWND hWnd, WCHAR * filePath, int showFlags)
 {
-    _Console.Create(hWnd, showFlags & lcp_darkmode);
+    _Console.Create(hWnd, showFlags & lcp_wraptext, showFlags & lcp_darkmode);
     _Console.SetFont(_hFontGUI);
 
     ProcessItem(filePath);
@@ -98,8 +98,14 @@ int __stdcall ListLoadNext(HWND hWnd, HWND ListWin, char * filePath, int showFla
 /// <summary>
 /// Called when a user switches to the next or previous file in lister with 'n' or 'p' keys, or goes to the next/previous file in the Quick View Panel, and when the definition string either doesn't exist, or its evaluation returns true.
 /// </summary>
-int __stdcall ListLoadNextW(HWND ParentWin, HWND ListWin, WCHAR * filePath, int)
+int __stdcall ListLoadNextW(HWND hParentWnd, HWND hWnd, WCHAR * filePath, int)
 {
+    _Console.Hide();
+
+    ProcessItem(filePath);
+
+    _Console.Show();
+
     return LISTPLUGIN_OK;
 }
 
@@ -116,6 +122,61 @@ void __stdcall ListCloseWindow(HWND hWnd)
 /// </summary>
 int __stdcall ListSendCommand(HWND hWnd, int command, int parameter)
 {
+    switch (command)
+    {
+        // Copy current selection to the clipboard
+        case lc_copy:
+        {
+            ::SendMessageW(hWnd, WM_COPY, 0, 0);
+
+            return LISTPLUGIN_OK;
+        }
+
+        // New parameters passed to plugin
+        case lc_newparams:
+        {
+            ::PostMessageW(::GetParent(hWnd), WM_COMMAND, MAKEWPARAM(0, itm_next), (LPARAM) hWnd);
+
+            return LISTPLUGIN_OK;
+        }
+
+        // Select the whole contents.
+        case lc_selectall:
+        {
+            ::SendMessageW(hWnd, EM_SETSEL, 0, -1);
+
+            return LISTPLUGIN_OK;
+        }
+
+        case lc_setpercent:
+        {
+            int LineCount = (int) ::SendMessageW(hWnd, EM_GETLINECOUNT, 0, 0);
+
+            if (LineCount <= 0)
+                return LISTPLUGIN_ERROR;
+
+            int Line = ::MulDiv(parameter, LineCount, 100);
+
+            int FirstVisibleLine = (int) ::SendMessageW(hWnd, EM_GETFIRSTVISIBLELINE, 0, 0);
+
+            ::SendMessageW(hWnd, EM_LINESCROLL, 0, Line - FirstVisibleLine);
+
+            FirstVisibleLine = (int) ::SendMessageW(hWnd, EM_GETFIRSTVISIBLELINE, 0, 0);
+
+            // Place caret on first visible line!
+            int FirstChar = ::SendMessageW(hWnd, EM_LINEINDEX, FirstVisibleLine, 0);
+
+            ::SendMessageW(hWnd, EM_SETSEL, FirstChar, FirstChar);
+
+            int Percentage = ::MulDiv(FirstVisibleLine, 100, LineCount);
+
+            // Update percentage display
+            ::PostMessage(::GetParent(hWnd), WM_COMMAND, MAKEWPARAM(Percentage, itm_percent), (LPARAM) hWnd);
+
+            return LISTPLUGIN_OK;
+        }
+    }
+
     return LISTPLUGIN_ERROR;
 }
 
