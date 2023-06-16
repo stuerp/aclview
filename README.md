@@ -1,13 +1,16 @@
 
 # aclview
 
-[aclview](https://github.com/stuerp/aclview/releases) is a [Total Commander](https://www.ghisler.com/) lister plugin that shows the ACL of a file or directory.
+[aclview](https://github.com/stuerp/aclview/releases) is a [Total Commander](https://www.ghisler.com/) lister plugin that shows the NTFS ACL of a file or directory.
 
 ![Screenshot](/Artwork/Screenshot.png?raw=true "Screenshot")
 
 ## Features
 
+* Verbose description of the ALC instead of the microscopic default Windows dialog.
+* Any NTFS file system item can be examined.
 * Supports dark mode.
+* Support Total Commander 32-bit (.wlx) and 64-bit (.wlx64).
 
 ## Requirements
 
@@ -48,6 +51,10 @@ If you'd like to contribute, please fork the repository and use a feature
 branch. Pull requests are warmly welcome.
 
 ## Change Log
+
+v0.3.0, 2023-xx-xx, *"Is it dark in here?"*
+
+* Light and dark mode implemented. Still having problems with the scrollbar.
 
 v0.2.0, 2023-06-15, *"A small step"*
 

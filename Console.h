@@ -1,5 +1,5 @@
 
-/** Console.h (2023.06.15) P. Stuer **/
+/** Console.h (2023.06.16) P. Stuer **/
 
 #pragma once
 
@@ -26,21 +26,21 @@ public:
     void Write(LPCWSTR format, ...) const noexcept;
 
     HWND Handle() const noexcept { return _hRichEdit; }
-
-    void SetBackgroundColor(DWORD color) const noexcept;
-
-    void SetTextForeColor(COLORREF color) const noexcept;
-    void SetTextBackColor(COLORREF color) const noexcept;
-    void ResetTextColor() const noexcept;
+    bool DarkMode() const noexcept { return _DarkMode; }
+    
+    void SetDefaultTextColor(COLORREF color) noexcept;
+    void SetBold(bool enabled) noexcept;
+    void SetItalic(bool enabled) noexcept;
 
     void SetFont(HFONT hFont) const noexcept;
-    void SetBold(bool enabled) const noexcept;
-    void SetItalic(bool enabled) const noexcept;
+
     void SetBullet(bool enabled) const noexcept;
 
     void IncreaseIndent() const noexcept;
     void DecreaseIndent() const noexcept;
 
+    void SetBackgroundColor(DWORD color) const noexcept { ::SendMessageW(_hRichEdit, EM_SETBKGNDCOLOR, 0, (LPARAM) color); }
+    void SetFormat() const noexcept { ::SendMessageW(_hRichEdit, EM_SETCHARFORMAT, SCF_SELECTION, (LPARAM) &_Format); }
     void Select(int from, int to) const noexcept { ::SendMessageW(_hRichEdit, EM_SETSEL, (WPARAM) from, to); }
     void ScrollToTop() const noexcept { ::SendMessageW(_hRichEdit, WM_VSCROLL, SB_TOP, 0L); }
 
@@ -50,4 +50,6 @@ private:
 
 private:
     HWND _hRichEdit;
+    CHARFORMAT _Format = { sizeof(_Format) };
+    bool _DarkMode;
 };

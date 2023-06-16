@@ -1,5 +1,5 @@
 
-/** ShowACL.cpp (2023.06.14) P. Stuer **/
+/** ShowACL.cpp (2023.06.16) P. Stuer **/
 
 #include "pch.h"
 
@@ -60,6 +60,7 @@ static HRESULT ShowExplicitAccess(const EXPLICIT_ACCESS_W * ea, ObjectType objec
     {
         _Console.SetItalic(true);
         _Console.Write(L"Trustee\n");
+        _Console.SetItalic(false);
         _Console.IncreaseIndent();
 
         ShowTrustee(&ea->Trustee);
@@ -70,6 +71,7 @@ static HRESULT ShowExplicitAccess(const EXPLICIT_ACCESS_W * ea, ObjectType objec
     {
         _Console.SetItalic(true);
         _Console.Write(L"Access Rights\n");
+        _Console.SetItalic(false);
         _Console.IncreaseIndent();
 
             LPCWSTR AccessMode = NULL;
@@ -243,6 +245,7 @@ static HRESULT ShowExplicitAccess(const EXPLICIT_ACCESS_W * ea, ObjectType objec
     {
         _Console.SetItalic(true);
         _Console.Write(L"Inheritance\n");
+        _Console.SetItalic(false);
         _Console.IncreaseIndent();
 
             _Console.SetBullet(true);

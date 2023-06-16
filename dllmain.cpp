@@ -1,5 +1,5 @@
 
-/** dllmain.cpp (2023.06.15) P. Stuer **/
+/** dllmain.cpp (2023.06.16) P. Stuer **/
 
 #include "pch.h"
 
@@ -86,19 +86,19 @@ HWND __stdcall ListLoadW(HWND hWnd, WCHAR * filePath, int showFlags)
 /// <summary>
 /// Called when a user switches to the next or previous file in lister with 'n' or 'p' keys, or goes to the next/previous file in the Quick View Panel, and when the definition string either doesn't exist, or its evaluation returns true.
 /// </summary>
-int __stdcall ListLoadNext(HWND hWnd, HWND ListWin, char * filePath, int showFlags)
+int __stdcall ListLoadNext(HWND hParentWnd, HWND hWnd, char * filePath, int showFlags)
 {
     WCHAR FilePathW[MAX_PATH];
 
     ::MultiByteToWideChar(CP_ACP, 0, filePath, -1, FilePathW, _countof(FilePathW) - 1);
 
-    return ListLoadNextW(hWnd, ListWin, FilePathW, showFlags);
+    return ListLoadNextW(hParentWnd, hWnd, FilePathW, showFlags);
 }
 
 /// <summary>
 /// Called when a user switches to the next or previous file in lister with 'n' or 'p' keys, or goes to the next/previous file in the Quick View Panel, and when the definition string either doesn't exist, or its evaluation returns true.
 /// </summary>
-int __stdcall ListLoadNextW(HWND hParentWnd, HWND, WCHAR * filePath, int)
+int __stdcall ListLoadNextW(HWND hParentWnd, HWND, WCHAR * filePath, int showFlags)
 {
     ::SendMessageA(hParentWnd, WM_SETREDRAW, FALSE, 0);
 
@@ -386,6 +386,7 @@ static BOOL OnProcessDetach()
 static void ProcessItem(const wstring & pathName)
 {
     _Console.Clear();
+    _Console.SetDefaultTextColor(_Console.DarkMode() ? RGB(220, 220, 220) : ::GetSysColor(COLOR_WINDOWTEXT));
 
     DWORD FileAttributes = ::GetFileAttributesW(pathName.c_str());
 
@@ -399,6 +400,7 @@ static void ProcessItem(const wstring & pathName)
 
     _Console.SetBold(true);
     _Console.Write(L"Item: \"%s\"\n", pathName.c_str());
+    _Console.SetBold(false);
 
     // Low-level Security Descriptor Functions, https://msdn.microsoft.com/en-us/library/aa379204(v=vs.85).aspx
     const SECURITY_INFORMATION RequestedInformation = OWNER_SECURITY_INFORMATION | GROUP_SECURITY_INFORMATION | DACL_SECURITY_INFORMATION;
@@ -423,6 +425,7 @@ static void ProcessItem(const wstring & pathName)
         {
             _Console.SetBold(true);
             _Console.Write(L"\nSecurity Descriptor:\n");
+            _Console.SetBold(false);
 
             ShowSecurityDescriptor(sd);
         }
@@ -430,6 +433,7 @@ static void ProcessItem(const wstring & pathName)
         {
             _Console.SetBold(true);
             _Console.Write(L"\nOwner:\n");
+            _Console.SetBold(false);
 
             PSID OwnerSID;
             BOOL IsOwnerDefaulted;
@@ -443,6 +447,7 @@ static void ProcessItem(const wstring & pathName)
         {
             _Console.SetBold(true);
             _Console.Write(L"\nPrimary Group:\n");
+            _Console.SetBold(false);
 
             PSID GroupSID;
             BOOL IsGroupDefaulted;
@@ -456,6 +461,7 @@ static void ProcessItem(const wstring & pathName)
         {
             _Console.SetBold(true);
             _Console.Write(L"\nDACL:\n");
+            _Console.SetBold(false);
 
             PACL DACL;
             BOOL IsDACLPresent;
@@ -478,6 +484,8 @@ static void ProcessItem(const wstring & pathName)
 
     // Highlight any quoted text.
     {
+        _Console.SetDefaultTextColor(::GetSysColor(COLOR_HIGHLIGHT));
+
         FINDTEXTW ft = { { 0, (LONG) ::SendMessageW(_Console.Handle(), WM_GETTEXTLENGTH, 0, 0) }, L"\"" };
 
         int OpeningQuote = (int) ::SendMessageW(_Console.Handle(), EM_FINDTEXT, (WPARAM) FR_DOWN, (LPARAM) &ft);
@@ -492,7 +500,7 @@ static void ProcessItem(const wstring & pathName)
                 break;
 
             _Console.Select(OpeningQuote, ClosingQuote);
-            _Console.SetTextForeColor(::GetSysColor(COLOR_HIGHLIGHT));
+            _Console.SetFormat();
 
             ft.chrg.cpMin = ClosingQuote + 1;
 

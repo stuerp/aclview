@@ -1,5 +1,5 @@
 
-/** Console.cpp (2023.06.15) P. Stuer **/
+/** Console.cpp (2023.06.16) P. Stuer **/
 
 #include "pch.h"
 
@@ -40,9 +40,11 @@ void Console::Create(HWND hWnd, bool wordwrap, bool darkMode) noexcept
     ::SendMessageW(_hRichEdit, EM_SETMARGINS, EC_LEFTMARGIN, 8);
     ::SendMessageW(_hRichEdit, EM_SETEVENTMASK, 0, ENM_UPDATE); // ENM_SCROLL doesn't work for thumb movements.
 
-    SetBackgroundColor(darkMode ? RGB(31, 31, 31) : ::GetSysColor(COLOR_3DFACE));
+    SetBackgroundColor(darkMode ? RGB(32, 32, 32) : ::GetSysColor(COLOR_WINDOW));
 
     ::PostMessageW(hWnd, WM_COMMAND, MAKEWPARAM(lcp_ansi, itm_fontstyle), (LPARAM) _hRichEdit);
+
+    _DarkMode = darkMode;
 }
 
 /// <summary>
@@ -57,15 +59,8 @@ void Console::Write(LPCWSTR format, ...) const noexcept
     ::_vsnwprintf(Text, _countof(Text) - 1, format, va);
     va_end(va);
 
+    SetFormat();
     ::SendMessageW(_hRichEdit, EM_REPLACESEL, FALSE, (LPARAM) Text);
-}
-
-/// <summary>
-/// Set the background color.
-/// </summary>
-void Console::SetBackgroundColor(DWORD color) const noexcept
-{
-    ::SendMessageW(_hRichEdit, EM_SETBKGNDCOLOR, 0, (LPARAM) color);
 }
 
 /// <summary>
@@ -79,68 +74,28 @@ void Console::SetFont(HFONT hFont) const noexcept
 /// <summary>
 /// Set the text color.
 /// </summary>
-void Console::SetTextForeColor(COLORREF color) const noexcept
+void Console::SetDefaultTextColor(COLORREF color) noexcept
 {
-    CHARFORMAT cf = { sizeof(cf) };
-
-    cf.dwMask      = CFM_COLOR;
-    cf.crTextColor = color;
-    cf.dwEffects   = 0;
-
-    ::SendMessageW(_hRichEdit, EM_SETCHARFORMAT, SCF_SELECTION, (LPARAM) &cf);
-}
-
-/// <summary>
-/// Set the text color.
-/// </summary>
-void Console::SetTextBackColor(COLORREF color) const noexcept
-{
-    CHARFORMAT cf = { sizeof(cf) };
-
-    cf.dwMask      = CFM_BACKCOLOR;
-    cf.crTextColor = color;
-    cf.dwEffects   = 0;
-
-    ::SendMessageW(_hRichEdit, EM_SETCHARFORMAT, SCF_SELECTION, (LPARAM) &cf);
-}
-
-/// <summary>
-/// Set the text color to default (GetSysColor(COLOR_WINDOWTEXT)).
-/// </summary>
-void Console::ResetTextColor() const noexcept
-{
-    CHARFORMAT cf = { sizeof(cf) };
-
-    cf.dwMask    = CFM_COLOR;
-    cf.dwEffects = CFE_AUTOCOLOR;
-
-    ::SendMessageW(_hRichEdit, EM_SETCHARFORMAT, SCF_SELECTION, (LPARAM) &cf);
+    _Format.dwMask |= CFM_COLOR;
+    _Format.crTextColor = color;
 }
 
 /// <summary>
 /// Set the character style to bold.
 /// </summary>
-void Console::SetBold(bool enabled) const noexcept
+void Console::SetBold(bool enabled) noexcept
 {
-    CHARFORMAT cf = { sizeof(cf) };
-
-    cf.dwMask    = CFM_BOLD;
-    cf.dwEffects = (DWORD)(enabled ? CFE_BOLD : 0);
-
-    ::SendMessageW(_hRichEdit, EM_SETCHARFORMAT, SCF_SELECTION, (LPARAM) &cf);
+    _Format.dwMask |= CFM_BOLD;
+    _Format.dwEffects = (DWORD)(enabled ? CFE_BOLD : 0);
 }
 
 /// <summary>
 /// Set the character style to italic.
 /// </summary>
-void Console::SetItalic(bool enabled) const noexcept
+void Console::SetItalic(bool enabled) noexcept
 {
-    CHARFORMAT cf = { sizeof(cf) };
-
-    cf.dwMask    = CFM_ITALIC;
-    cf.dwEffects = (DWORD)(enabled ? CFE_ITALIC : 0);
-
-    ::SendMessageW(_hRichEdit, EM_SETCHARFORMAT, SCF_SELECTION, (LPARAM) &cf);
+    _Format.dwMask |= CFM_ITALIC;
+    _Format.dwEffects = (DWORD)(enabled ? CFE_ITALIC : 0);
 }
 
 /// <summary>
