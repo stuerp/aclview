@@ -52,9 +52,9 @@ branch. Pull requests are warmly welcome.
 
 ## Change Log
 
-v0.3.0, 2023-xx-xx, *"Is it dark in here?"*
+v0.3.0, 2023-06-26, *"Is it dark in here?"*
 
-* Light and dark mode implemented. Still having problems with the scrollbar.
+* Implemented light and dark mode.
 
 v0.2.0, 2023-06-15, *"A small step"*
 
@@ -73,6 +73,8 @@ v0.1.0, 2023-06-14, *"Scratchin' the itch"*
 
 ## Reference Material
 
+* Total Commander
+  * [SDK](https://github.com/ghisler?tab=repositories)
 * Windows User Interface
   * [Desktop App User Interface](https://learn.microsoft.com/en-us/windows/win32/windows-application-ui-development)
   * [Windows User Experience Interaction Guidelines](https://learn.microsoft.com/en-us/windows/win32/uxguide/guidelines)
@@ -84,9 +86,9 @@ v0.1.0, 2023-06-14, *"Scratchin' the itch"*
 
 ## Links
 
-* Home page: https://github.com/stuerp/aclview
-* Repository: https://github.com/stuerp/aclview.git
-* Issue tracker: https://github.com/stuerp/aclview/issues
+* Home page: [https://github.com/stuerp/aclview](https://github.com/stuerp/aclview)
+* Repository: [https://github.com/stuerp/aclview.git](https://github.com/stuerp/aclview.git)
+* Issue tracker: [https://github.com/stuerp/aclview/issues](https://github.com/stuerp/aclview/issues)
 
 ## License
 

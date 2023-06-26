@@ -1,11 +1,11 @@
 
-/** Support.cpp (2023.06.14) P. Stuer **/
+/** Support.cpp (2023.06.16) P. Stuer **/
 
 #include "pch.h"
 
 #include <CppCoreCheck/Warnings.h>
 
-#pragma warning(disable: 4710 4711 ALL_CPPCORECHECK_WARNINGS)
+#pragma warning(disable: 4710 4711 4820 ALL_CPPCORECHECK_WARNINGS)
 
 #include "Console.h"
 #include "Support.h"

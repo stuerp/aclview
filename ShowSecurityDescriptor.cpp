@@ -5,7 +5,7 @@
 
 #include <CppCoreCheck/Warnings.h>
 
-#pragma warning(disable: 4710 ALL_CPPCORECHECK_WARNINGS)
+#pragma warning(disable: 4710 4820 ALL_CPPCORECHECK_WARNINGS)
 
 #include "Console.h"
 #include "Support.h"

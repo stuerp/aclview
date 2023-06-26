@@ -5,7 +5,7 @@
 
 #include <CppCoreCheck/Warnings.h>
 
-#pragma warning(disable: 4710 4711 5045 ALL_CPPCORECHECK_WARNINGS)
+#pragma warning(disable: 4710 4711 4820 5045 ALL_CPPCORECHECK_WARNINGS)
 
 #include "Resources.h"
 #include "Control.h"
@@ -98,7 +98,7 @@ int __stdcall ListLoadNext(HWND hParentWnd, HWND hWnd, char * filePath, int show
 /// <summary>
 /// Called when a user switches to the next or previous file in lister with 'n' or 'p' keys, or goes to the next/previous file in the Quick View Panel, and when the definition string either doesn't exist, or its evaluation returns true.
 /// </summary>
-int __stdcall ListLoadNextW(HWND hParentWnd, HWND, WCHAR * filePath, int showFlags)
+int __stdcall ListLoadNextW(HWND hParentWnd, HWND, WCHAR * filePath, int)
 {
     ::SendMessageA(hParentWnd, WM_SETREDRAW, FALSE, 0);
 
@@ -189,7 +189,7 @@ int __stdcall ListSendCommand(HWND hWnd, int command, int parameter)
 /// <summary>
 /// Called when the user chooses the print function.
 /// </summary>
-int __stdcall ListPrint(HWND hWnd, char * filePath, char * printerName, int printerFlags, RECT * margins)
+int __stdcall ListPrint(HWND, char *, char *, int, RECT *)
 {
     return LISTPLUGIN_ERROR;
 }

@@ -1,11 +1,11 @@
 
-/** Console.cpp (2023.06.16) P. Stuer **/
+/** Console.cpp (2023.06.26) P. Stuer **/
 
 #include "pch.h"
 
 #include <CppCoreCheck/Warnings.h>
 
-#pragma warning(disable: 4710 4711 ALL_CPPCORECHECK_WARNINGS)
+#pragma warning(disable: 4710 4711 4820 ALL_CPPCORECHECK_WARNINGS)
 
 #include "Console.h"
 
@@ -26,13 +26,15 @@ void Console::Create(HWND hWnd, bool wordwrap, bool darkMode) noexcept
 
     const DWORD Style = WS_CHILD | (wordwrap ? (DWORD) 0 : WS_HSCROLL) | WS_VSCROLL | ES_MULTILINE | ES_READONLY | ES_NOHIDESEL;
 
-    _hRichEdit = ::CreateWindowExW(0, MSFTEDIT_CLASS, L"", Style, cr.left, cr.top, cr.right - cr.left, cr.bottom - cr.top, hWnd, NULL, ::GetModuleHandleW(NULL), NULL);
+    const HMODULE hInstance = ::GetModuleHandleW(NULL);
+
+    _hRichEdit = ::CreateWindowExW(0, MSFTEDIT_CLASS, L"", Style, cr.left, cr.top, cr.right - cr.left, cr.bottom - cr.top, hWnd, NULL, hInstance, NULL);
 
     if (_hRichEdit == 0)
-        _hRichEdit = ::CreateWindowExW(0, L"RichEdit20A", L"", Style, cr.left, cr.top, cr.right - cr.left, cr.bottom - cr.top, hWnd, NULL, ::GetModuleHandleW(NULL), NULL);
+        _hRichEdit = ::CreateWindowExW(0, L"RichEdit20A", L"", Style, cr.left, cr.top, cr.right - cr.left, cr.bottom - cr.top, hWnd, NULL, hInstance, NULL);
 
     if (_hRichEdit == 0)
-        _hRichEdit = ::CreateWindowExW(0, L"RichEdit", L"", Style, cr.left, cr.top, cr.right - cr.left, cr.bottom - cr.top, hWnd, NULL, ::GetModuleHandleW(NULL), NULL);
+        _hRichEdit = ::CreateWindowExW(0, L"RichEdit", L"", Style, cr.left, cr.top, cr.right - cr.left, cr.bottom - cr.top, hWnd, NULL, hInstance, NULL);
 
     if (_hRichEdit == 0)
         return;
@@ -43,6 +45,8 @@ void Console::Create(HWND hWnd, bool wordwrap, bool darkMode) noexcept
     SetBackgroundColor(darkMode ? RGB(32, 32, 32) : ::GetSysColor(COLOR_WINDOW));
 
     ::PostMessageW(hWnd, WM_COMMAND, MAKEWPARAM(lcp_ansi, itm_fontstyle), (LPARAM) _hRichEdit);
+
+    (void) ::SetWindowTheme(_hRichEdit, L"DarkMode_Explorer", nullptr);
 
     _DarkMode = darkMode;
 }

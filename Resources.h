@@ -1,5 +1,5 @@
 
-/** $VER: Resource.h (2023.06.14) **/
+/** $VER: Resource.h (2023.06.26) **/
 
 #pragma once
 
@@ -21,7 +21,7 @@
 #define STR_COPYRIGHT           TEXT("Copyright (c) 2023") STR_COMPANY_NAME TEXT(". All rights reserved.")
 
 #define NUM_FILE_MAJOR          0
-#define NUM_FILE_MINOR          2
+#define NUM_FILE_MINOR          3
 #define NUM_FILE_PATCH          0
 #define NUM_FILE_PRERELEASE     0
 
@@ -30,7 +30,7 @@
 #define STR_FILE_DESCRIPTION    TEXT("Adds ACL viewing to Total Commander")
 
 #define NUM_PRODUCT_MAJOR       0
-#define NUM_PRODUCT_MINOR       2
+#define NUM_PRODUCT_MINOR       3
 #define NUM_PRODUCT_PATCH       0
 #define NUM_PRODUCT_PRERELEASE  0
 
