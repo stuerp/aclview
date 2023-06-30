@@ -1,5 +1,5 @@
 
-/** Console.cpp (2023.06.26) P. Stuer **/
+/** Console.cpp (2023.06.30) P. Stuer **/
 
 #include "pch.h"
 
@@ -46,7 +46,8 @@ void Console::Create(HWND hWnd, bool wordwrap, bool darkMode) noexcept
 
     ::PostMessageW(hWnd, WM_COMMAND, MAKEWPARAM(lcp_ansi, itm_fontstyle), (LPARAM) _hRichEdit);
 
-    (void) ::SetWindowTheme(_hRichEdit, L"DarkMode_Explorer", nullptr);
+    if (darkMode)
+        (void) ::SetWindowTheme(_hRichEdit, L"DarkMode_Explorer", nullptr);
 
     _DarkMode = darkMode;
 }

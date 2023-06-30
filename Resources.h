@@ -1,5 +1,5 @@
 
-/** $VER: Resource.h (2023.06.26) **/
+/** $VER: Resource.h (2023.06.30) **/
 
 #pragma once
 
@@ -22,7 +22,7 @@
 
 #define NUM_FILE_MAJOR          0
 #define NUM_FILE_MINOR          3
-#define NUM_FILE_PATCH          0
+#define NUM_FILE_PATCH          1
 #define NUM_FILE_PRERELEASE     0
 
 #define STR_FILE_NAME           TEXT(STR_COMPONENT_FILENAME)
@@ -31,7 +31,7 @@
 
 #define NUM_PRODUCT_MAJOR       0
 #define NUM_PRODUCT_MINOR       3
-#define NUM_PRODUCT_PATCH       0
+#define NUM_PRODUCT_PATCH       1
 #define NUM_PRODUCT_PRERELEASE  0
 
 #define STR_PRODUCT_NAME        STR_COMPANY_NAME TEXT(" ") STR_INTERNAL_NAME
