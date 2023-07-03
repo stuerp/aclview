@@ -1,5 +1,5 @@
 
-/** dllmain.cpp (2023.06.16) P. Stuer **/
+/** dllmain.cpp (2023.07.03) P. Stuer **/
 
 #include "pch.h"
 
@@ -68,18 +68,18 @@ HWND __stdcall ListLoad(HWND hWnd, char * filePath, int showFlags)
 /// </summary>
 HWND __stdcall ListLoadW(HWND hWnd, WCHAR * filePath, int showFlags)
 {
+    DWORD Attributes = ::GetFileAttributesW(filePath);
+
+    if ((Attributes == INVALID_FILE_ATTRIBUTES) || !(Attributes & FILE_ATTRIBUTE_DIRECTORY))
+        return 0;
+
     _Console.Create(hWnd, showFlags & lcp_wraptext, showFlags & lcp_darkmode);
     _Console.SetFont(_hFontGUI);
 
     ProcessItem(filePath);
 
     _Console.Show();
-/*
-    if (!_Control.Create(hWnd, TEXT("Learn to Program for Windows"), WS_CHILD))
-        return 0;
 
-    ::ShowWindow(_Control.Handle(), SW_SHOW);
-*/
     return _Console.Handle();
 }
 

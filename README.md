@@ -52,6 +52,10 @@ branch. Pull requests are warmly welcome.
 
 ## Change Log
 
+v0.4.0, 2023-06-30, *"Greed is not good"*
+
+* Improved: Only directories will be examined.
+
 v0.3.1, 2023-06-30, *"Is it dark in here?"* (Redux)
 
 * Bug Fix: Forgot to make dark mode conditional.
